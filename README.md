@@ -117,7 +117,7 @@ If you prefer to execute the pipeline locally (outside Docker):
 
 3. **Run the script**
    ```bash
-   python script.py
+   python app.py
    ```
 
 4. **Results**
@@ -149,7 +149,7 @@ The primary goals of this project are to:
 - Demonstrate a **complete NLP workflow** for text analytics;
 - Compare **topic modeling methods** (LSA vs LDA);
 - Provide **clean, modular, production-ready Python code**, which can be further used to 
-- train custom models and reuse them in different contexts.
+- Train custom models and reuse them in different contexts.
 
 ---
 
