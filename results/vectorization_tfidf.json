@@ -1,0 +1,37 @@
+{
+  "method": "tfidf",
+  "shape": [
+    124468,
+    20000
+  ],
+  "nnz": 10404908,
+  "n_features": 20000,
+  "vectorizer_type": "TfidfVectorizer",
+  "vectorizer_params": {
+    "analyzer": "word",
+    "binary": false,
+    "decode_error": "strict",
+    "dtype": "float32",
+    "encoding": "utf-8",
+    "input": "content",
+    "lowercase": false,
+    "max_df": 1.0,
+    "max_features": 20000,
+    "min_df": 2,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "norm": "l2",
+    "preprocessor": null,
+    "smooth_idf": true,
+    "stop_words": null,
+    "strip_accents": null,
+    "sublinear_tf": true,
+    "token_pattern": "(?u)\\b\\w\\w+\\b",
+    "tokenizer": null,
+    "use_idf": true,
+    "vocabulary": null
+  },
+  "created_utc": "2025-10-30T19:21:35Z"
+}

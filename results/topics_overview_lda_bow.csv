@@ -1,0 +1,11 @@
+method,topic_id,top_10_terms
+lda_bow,0,"consumer, information, agency, reporting agency, reporting, report, consumer reporting, section, shall, identity"
+lda_bow,1,"credit, report, credit report, inquiry, account, information, fraudulent, item, remove, please"
+lda_bow,2,"loan, mortgage, would, time, told, home, get, company, call, back"
+lda_bow,3,"debt, collection, credit, company, report, never, agency, bill, credit report, call"
+lda_bow,4,"account, credit, report, reporting, credit report, information, date, bureau, balance, reported"
+lda_bow,5,"credit, reporting, consumer, account, act, law, debt, violation, information, provide"
+lda_bow,6,"information, account, theft, identity, identity theft, credit, report, consumer, inquiry, reporting"
+lda_bow,7,"payment, credit, late, month, due, paid, account, balance, made, would"
+lda_bow,8,"letter, sent, dispute, information, received, credit, complaint, response, address, one"
+lda_bow,9,"account, card, bank, money, told, would, called, credit card, call, time"

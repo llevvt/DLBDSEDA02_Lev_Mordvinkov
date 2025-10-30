@@ -1,0 +1,7 @@
+{
+  "method": "lsa_tfidf",
+  "n_topics": 10,
+  "n_docs": 124468,
+  "doc_topic_path": "results/doc_topic_lsa_tfidf.csv",
+  "created_utc": "2025-10-30T19:21:41Z"
+}
