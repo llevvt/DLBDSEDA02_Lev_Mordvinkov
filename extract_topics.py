@@ -1,10 +1,10 @@
 from __future__ import annotations
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
+from sklearn.decomposition import LatentDirichletAllocation
 import numpy as np
 from numpy import ndarray
-from typing import List, Tuple, Dict, Iterable, Any, Optional
+from typing import List, Dict, Any
 import time
 from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import Normalizer
