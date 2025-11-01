@@ -1,0 +1,9 @@
+=== VECTORISATION COMPARISON REPORT ===
+
+BoW: shape=(124468, 20000), nnz=10404908, density=0.004180, mean_weight=1.430584
+TF-IDF: shape=(124468, 20000), nnz=10404908, density=0.004180, mean_weight=0.093615
+
+Top 5 terms by mean weight:
+
+BoW top-5 terms: account, credit, report, payment, information
+TF-IDF top-5 terms: account, credit, report, payment, credit report
