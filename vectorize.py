@@ -163,3 +163,18 @@ def vectorize_with_tfidf(
     )
 
     return X.tocsr(), vectorizer, feature_names
+
+def matrix_stats(X:csr_matrix, name:str) -> str:
+    '''
+    Prepares statistical values for matrix obtained in vectorization
+
+    :param X: Matrix from vectorization
+    :param name: Name of the method
+    :return: string with the information about matrix
+    '''
+
+    nnz = X.nnz
+    total = X.shape[0] * X.shape[1]
+    density = nnz / total
+    mean_val = X.data.mean() if X.nnz > 0 else 0
+    return f"{name}: shape={X.shape}, nnz={nnz}, density={density:.6f}, mean_weight={mean_val:.6f}"

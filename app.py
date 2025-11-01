@@ -5,9 +5,10 @@ import pandas as pd
 import logging
 from dotenv import load_dotenv
 from normalize import normalize_dataset
-from vectorize import vectorize_with_bow, vectorize_with_tfidf
+from vectorize import vectorize_with_bow, vectorize_with_tfidf, matrix_stats
 from extract_topics import topic_extraction_with_lda, topic_extraction_with_lsa
 from helpers import _ensure_dir, save_vectorization, save_topics, save_comparison_overview
+import numpy as np
 
 if __name__ == "__main__":
     #Setting up logger
@@ -121,6 +122,32 @@ if __name__ == "__main__":
         outdir=ARTIFACTS_DIR,
     )
     logger.info("Saved LSA artifacts: %s", meta_lsa)
+
+    #Comparing Vectorization Results
+    comparison_lines = []
+    comparison_lines.append("=== VECTORISATION COMPARISON REPORT ===\n")
+
+    comparison_lines.append(matrix_stats(X_bow, "BoW"))
+    comparison_lines.append(matrix_stats(X_tfidf, "TF-IDF"))
+    comparison_lines.append("\nTop 5 terms by mean weight:\n")
+
+    bow_means = np.asarray(X_bow.mean(axis=0)).ravel()
+    tfidf_means = np.asarray(X_tfidf.mean(axis=0)).ravel()
+
+    top5_bow_idx = bow_means.argsort()[-5:][::-1]
+    top5_tfidf_idx = tfidf_means.argsort()[-5:][::-1]
+
+    top5_bow_terms = [features_bow[i] for i in top5_bow_idx]
+    top5_tfidf_terms = [features_tfidf[i] for i in top5_tfidf_idx]
+
+    comparison_lines.append("BoW top-5 terms: " + ", ".join(top5_bow_terms))
+    comparison_lines.append("TF-IDF top-5 terms: " + ", ".join(top5_tfidf_terms))
+
+    comparison_path = os.path.join(ARTIFACTS_DIR, "vectorization_comparison.txt")
+    with open(comparison_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(comparison_lines))
+
+    logger.info(f"Saved vectorization comparison report to {comparison_path}")
 
     #Saving comparison results
     save_comparison_overview(methods=["lda_bow", "lsa_tfidf"], outdir=ARTIFACTS_DIR)
