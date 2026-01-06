@@ -20,14 +20,8 @@ All major parameters (e.g., vocabulary size, n-gram range, topic count, iteratio
 ```
 .
 ├── app.py                # Main orchestrator script
-├── normalize.py             # Text normalization logic
-├── vectorize.py             # TF–IDF and BoW vectorization
-├── extract_topics.py        # LSA and LDA topic extraction
-├── helpers.py               # Utility functions (saving, logging, etc.)
 ├── requirements.txt         # Python dependencies
 ├── .env                     # Environment configuration
-├── Dockerfile               # Docker build instructions
-├── docker-compose.yml       # Container orchestration file
 └── README.md                # Documentation
 ```
 
@@ -67,37 +61,7 @@ RANDOM_STATE='42'
 
 ## 🚀 How to Run
 
-### 🐳 Option 1 — Run in Docker Container (Recommended)
-
-This option guarantees reproducibility and isolates dependencies.
-
-1. **Build the Docker image**
-   ```bash
-   docker compose build
-   ```
-
-2. **Run the pipeline**
-   ```bash
-   docker compose up --abort-on-container-exit
-   ```
-
-3. **Results**
-   - The pipeline automatically creates a directory defined by `OUTPUT_DIR` (default: `results`).
-   - All generated CSV, JSON, and topic reports are stored there and visible on the host.
-
-Example output structure:
-```
-./results/
-├── normalized_texts.csv
-├── bow_vectorization.json
-├── tfidf_vectorization.json
-├── lda_topics.json
-└── lsa_topics.json
-```
-
----
-
-### 💻 Option 2 — Run Directly on Host System
+### 💻 Directly on Host System
 
 If you prefer to execute the pipeline locally (outside Docker):
 
