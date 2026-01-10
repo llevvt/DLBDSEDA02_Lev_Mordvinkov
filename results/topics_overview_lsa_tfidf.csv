@@ -4,8 +4,3 @@ lsa_tfidf,1,"report, credit report, credit, reporting, information, identity, th
 lsa_tfidf,2,"identity, theft, identity theft, fraudulent, victim, victim identity, bank, fraudulent account, opened, account"
 lsa_tfidf,3,"debt, collection, letter, sent, agency, validation, original, received, law, collect"
 lsa_tfidf,4,"payment, late, loan, balance, late payment, act, reported, opened balance, reporting, acct opened"
-lsa_tfidf,5,"acct opened, opened balance, acct, account acct, balance account, charge, balance, dispute, opened, account"
-lsa_tfidf,6,"inquiry, hard inquiry, inquiry credit, hard, loan, add hard, mortgage, act, add, report per"
-lsa_tfidf,7,"debt, collection, inquiry, company, credit, hard inquiry, paid, hard, owe, inquiry credit"
-lsa_tfidf,8,"card, bank, credit card, reporting, account, credit reporting, fair, violation, act, reporting act"
-lsa_tfidf,9,"account, bank, pnc, link, money, loan, fund, please, creditor, original"

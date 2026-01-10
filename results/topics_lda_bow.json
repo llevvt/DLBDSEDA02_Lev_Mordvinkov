@@ -1,7 +1,7 @@
 {
   "method": "lda_bow",
-  "n_topics": 10,
+  "n_topics": 5,
   "n_docs": 124468,
   "doc_topic_path": "results/doc_topic_lda_bow.csv",
-  "created_utc": "2025-11-01T15:05:57Z"
+  "created_utc": "2026-01-10T11:09:43Z"
 }

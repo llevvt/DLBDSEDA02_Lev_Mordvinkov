@@ -1,0 +1,7 @@
+{
+  "method": "lda_bow",
+  "n_topics": 5,
+  "coherence_type": "c_v",
+  "coherence": 0.5522129274442686,
+  "timestamp": "2026-01-10T11:09:43.176437Z"
+}

@@ -21,7 +21,8 @@ import spacy
 import json
 from datetime import datetime
 from pathlib import Path
-
+from gensim.corpora import Dictionary
+from gensim.models.coherencemodel import CoherenceModel
 
 #Support functionality
 def _ensure_dir(path: str) -> Path:
@@ -604,6 +605,101 @@ def normalize_dataset(
 
     return df
 
+def compute_coherence_cv(
+    tokenized_texts: List[List[str]],
+    topics: List[List[str]],
+    logger: logging.Logger,
+    *,
+    coherence: str = "c_v",
+) -> float:
+    """
+    Compute topic coherence using Gensim.
+
+    This function is model-agnostic: it expects already tokenized texts and a list of topics,
+    where each topic is a list of top terms (strings).
+
+    :param tokenized_texts: List of token lists (one per document)
+    :param topics: List of topics; each topic is a list of top terms (strings)
+    :param logger: logger instance
+    :param coherence: coherence metric to use (default: 'c_v')
+    :return: coherence score (float)
+    """
+    if not tokenized_texts:
+        raise ValueError("tokenized_texts is empty - cannot compute coherence.")
+    if not topics:
+        raise ValueError("topics is empty - cannot compute coherence.")
+
+    dictionary = Dictionary(tokenized_texts)
+
+    cm = CoherenceModel(
+        topics=topics,
+        texts=tokenized_texts,
+        dictionary=dictionary,
+        coherence=coherence,
+    )
+    score = float(cm.get_coherence())
+    logger.info("Computed coherence (%s): %.6f", coherence, score)
+    return score
+
+def coherence_sweep_for_lda(
+    X: csr_matrix,
+    vectorizer: CountVectorizer,
+    tokenized_texts: List[List[str]],
+    logger: logging.Logger,
+    *,
+    k_min: int,
+    k_max: int,
+    n_top_terms: int,
+    n_iter: int,
+    learning_method: str,
+    learning_decay: float,
+    random_state: int,
+    n_jobs: int,
+    coherence: str = "c_v",
+) -> Dict[str, Any]:
+    """
+    Train multiple LDA models over a range of topic counts and compute coherence for each K.
+    Returns a dict with per-K coherence and the best K (argmax).
+    """
+    if k_min < 2:
+        k_min = 2
+    if k_max < k_min:
+        raise ValueError("k_max must be >= k_min")
+
+    results = []
+    for k in range(k_min, k_max + 1):
+        logger.info("Coherence sweep: training LDA for K=%d", k)
+        _, _, topics_k, _ = topic_extraction_with_lda(
+            X=X,
+            vectorizer=vectorizer,
+            logger=logger,
+            n_topics=k,
+            n_top_terms=n_top_terms,
+            n_iter=n_iter,
+            learning_method=learning_method,
+            learning_decay=learning_decay,
+            random_state=random_state,
+            n_jobs=n_jobs,
+        )
+        score = compute_coherence_cv(tokenized_texts, topics_k, logger, coherence=coherence)
+        results.append({"k": k, "coherence": score})
+
+    best = max(results, key=lambda r: r["coherence"])
+    payload = {
+        "coherence_type": coherence,
+        "k_min": k_min,
+        "k_max": k_max,
+        "results": results,
+        "best_k": int(best["k"]),
+        "best_coherence": float(best["coherence"]),
+    }
+    logger.info(
+        "Coherence sweep complete. Best K=%d with coherence=%.6f",
+        payload["best_k"],
+        payload["best_coherence"],
+    )
+    return payload
+
 #Topic extraction functionality
 def topic_extraction_with_lda(
     X: csr_matrix,
@@ -820,6 +916,60 @@ if __name__ == "__main__":
         learning_method="batch",
         random_state=random_state
     )
+
+    #Coherence score for final LDA model
+    tokenized_texts = [t.split() for t in df.tolist() if isinstance(t, str) and t.strip()]
+
+    lda_coherence = compute_coherence_cv(
+        tokenized_texts=tokenized_texts,
+        topics=topics,
+        logger=logger,
+        coherence="c_v",
+    )
+
+    coherence_payload = {
+        "method": "lda_bow",
+        "n_topics": int(n_topics),
+        "coherence_type": "c_v",
+        "coherence": float(lda_coherence),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    }
+
+    coherence_path = os.path.join(ARTIFACTS_DIR, "lda_coherence.json")
+    with open(coherence_path, "w", encoding="utf-8") as f:
+        json.dump(coherence_payload, f, indent=2)
+
+    logger.info(
+        "Saved LDA coherence to %s (K=%d, c_v=%.6f)",
+        coherence_path,
+        n_topics,
+        lda_coherence,
+    )
+
+    # Sweep coherence across a range of K (enable by setting COHERENCE_SWEEP=1)
+    if os.getenv("COHERENCE_SWEEP", "0") == "1":
+        k_min = int(os.getenv("COHERENCE_K_MIN", "2"))
+        k_max = int(os.getenv("COHERENCE_K_MAX", str(n_topics)))
+        sweep = coherence_sweep_for_lda(
+            X=X_bow,
+            vectorizer=vectorizer_bow,
+            tokenized_texts=tokenized_texts,
+            logger=logger,
+            k_min=k_min,
+            k_max=k_max,
+            n_top_terms=n_top_words,
+            n_iter=n_iterations,
+            learning_method="batch",
+            learning_decay=0.7,
+            random_state=random_state,
+            n_jobs=-1,
+            coherence="c_v",
+        )
+        sweep_path = os.path.join(ARTIFACTS_DIR, "lda_coherence_sweep.json")
+        with open(sweep_path, "w", encoding="utf-8") as f:
+            json.dump(sweep, f, indent=2)
+        logger.info("Saved LDA coherence sweep results to %s", sweep_path)
+
 
     #Saving results of Topic Extraction with LDA based on BoW
     meta_lda = save_topics(
