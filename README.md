@@ -63,9 +63,11 @@ RANDOM_STATE='42'
 
 ### 💻 Directly on Host System
 
-If you prefer to execute the pipeline locally (outside Docker):
-
-1. **Create and activate a virtual environment**
+1. **Install repository with git**
+    ```bash
+   git clone https://github.com/llevvt/DLBDSEDA02_Lev_Mordvinkov.git  # On Linux/Mac/Windows
+   ```
+2. **Create and activate a virtual environment**
    ```bash
    python -m venv venv
    source venv/bin/activate     # On Linux/Mac
@@ -73,18 +75,18 @@ If you prefer to execute the pipeline locally (outside Docker):
    venv\Scripts\activate      # On Windows
    ```
 
-2. **Install dependencies**
+3. **Install dependencies**
    ```bash
    pip install --upgrade pip
    pip install -r requirements.txt
    ```
 
-3. **Run the script**
+4. **Run the script**
    ```bash
    python app.py
    ```
 
-4. **Results**
+5. **Results**
    - Output files will be saved to the folder defined in `.env` (default: `./results`).
 
 ---
